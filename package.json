@@ -1,0 +1,26 @@
+{
+  "name": "cst3144backend",
+  "version": "1.0.0",
+  "description": "back end work for cst3144",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/adrea07/cst3144BackEnd.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/adrea07/cst3144BackEnd/issues"
+  },
+  "homepage": "https://github.com/adrea07/cst3144BackEnd#readme",
+  "dependencies": {
+    "express": "^5.3.0",
+    "mongodb": "^7.9.1"
+  }
+}
