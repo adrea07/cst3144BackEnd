@@ -1,4 +1,4 @@
-const { MongoClient } = require('mongodb');
+const { MongoClient, ObjectId } = require('mongodb');
 const express = require('express');
 
 const app = express();
@@ -41,6 +41,20 @@ async function startServer() {
                     msg: 'success',
                     insertedId: results.insertedId
                 });
+            } catch (err) {
+                next(err);
+            }
+        });
+        //get object using its object id
+        app.get('/collection/:collectionName/:id', async (req,res,next) => {
+            try{
+                if (!ObjectId.isValid(req.params.id)) {
+                    return res.status(400).send({ msg: 'Invalid Output'});
+                }
+                const result = await req.collection.findOne({
+                    _id: new ObjectId(req.params.id)
+                });
+                res.send(result);
             } catch (err) {
                 next(err);
             }
