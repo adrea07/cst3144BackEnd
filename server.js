@@ -24,6 +24,16 @@ async function startServer() {
             req.collection = db.collection(collectionName);
             next();
         });
+        //retrieve all records of table
+        app.get('.collection/:collectionName', async (req,res,next) => {
+            try {
+                const results = await req.collection.find({}).toArray();
+                res.send(results);
+            } catch (err) {
+                next(err);
+            }
+        });
+        
     } catch (error) {
         console.log('mongo db connection error:',error.message);
     }
