@@ -74,6 +74,26 @@ async function startServer() {
                 next(err);
             }
         });
+        //delete object using its object id
+        app.get('/collection/:collectionName/:id', async (req,res,next) => {
+            try{
+                if (!ObjectId.isValid(req.params.id)) {
+                    return res.status(400).send({ msg: 'Invalid Output'});
+                }
+                const result = await req.collection.deleteOne({
+                    _id: new ObjectId(req.params.id)
+                });
+                res.send(result.deletedCount === 1 ? { msg: 'success'} : { msg: 'error'});
+            } catch (err) {
+                next(err);
+            }
+        });
+
+        const port = process.env.PORT || 6001;
+
+        app.listen(port,() => {
+            console.log(`express js running at ${port}`);
+        });
 
     } catch (error) {
         console.log('mongo db connection error:',error.message);
