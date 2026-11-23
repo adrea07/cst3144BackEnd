@@ -33,7 +33,19 @@ async function startServer() {
                 next(err);
             }
         });
-        
+        //insert new object
+        app.post('/collection/:collectionName',async (req,res,next) => {
+            try {
+                const results = await req.collection.insertOne(req.body);
+                res.status(201).send({
+                    msg: 'success',
+                    insertedId: results.insertedId
+                });
+            } catch (err) {
+                next(err);
+            }
+        });
+
     } catch (error) {
         console.log('mongo db connection error:',error.message);
     }
