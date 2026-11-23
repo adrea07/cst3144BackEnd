@@ -59,6 +59,21 @@ async function startServer() {
                 next(err);
             }
         });
+        //update one object using its object id
+        app.put('/collection/:collectionName/:id', async (req,res,next) => {
+            try{
+                if (!ObjectId.isValid(req.params.id)) {
+                    return res.status(400).send({ msg: 'Invalid object id'});
+                }
+                const result = await req.collection.updateOne(
+                    {_id: new ObjectId(req.params.id)},
+                    { $set: req.body}
+                );
+                res.send(result.matchedCount === 1 ? { msg: 'success'} : { msg: 'error'});
+            } catch (err) {
+                next(err);
+            }
+        });
 
     } catch (error) {
         console.log('mongo db connection error:',error.message);
