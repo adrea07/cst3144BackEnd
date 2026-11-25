@@ -5,6 +5,19 @@ const app = express();
 app.use(express.json());
 app.set('port',6001);
 
+//configure cors
+app.use((req, res, next) => {
+    res.setHeader('Access-Control-Allow-Origin', '*');
+    res.setHeader('Access-Control-Allow-Methods', 'GET,HEAD,OPTIONS,POST,PUT,DELETE');
+    res.setHeader('Access-Control-Allow-Headers',
+        'Origin, Accept, X-Requested-With, Content-Type');
+ 
+    if (req.method === 'OPTIONS') {
+        return res.sendStatus(200);
+    }
+    next();
+});
+
 const uri = 'mongodb+srv://adrea18856_db_user:slimpitu2007@cluster0.vehldun.mongodb.net/'
 
 const client = new MongoClient(uri);
@@ -17,7 +30,7 @@ async function startServer() {
 
         //start root path
         app.get('/',(req,res) => {
-            res.send('Select a collection, eg- /collection/messages');
+            res.send('COREs after school class server is running, try /lessons');
         });
 
         app.param('collectionName', (req,res,next,collectionName) => {
@@ -25,7 +38,7 @@ async function startServer() {
             next();
         });
         //retrieve all records of table
-        app.get('.collection/:collectionName', async (req,res,next) => {
+        app.get('/lessons', async (req,res,next) => {
             try {
                 const results = await req.collection.find({}).toArray();
                 res.send(results);
@@ -34,7 +47,7 @@ async function startServer() {
             }
         });
         //insert new object
-        app.post('/collection/:collectionName',async (req,res,next) => {
+        app.post('/orders',async (req,res,next) => {
             try {
                 const results = await req.collection.insertOne(req.body);
                 res.status(201).send({
@@ -46,7 +59,7 @@ async function startServer() {
             }
         });
         //get object using its object id
-        app.get('/collection/:collectionName/:id', async (req,res,next) => {
+        app.get('/lessons/:id', async (req,res,next) => {
             try{
                 if (!ObjectId.isValid(req.params.id)) {
                     return res.status(400).send({ msg: 'Invalid Output'});
@@ -60,7 +73,7 @@ async function startServer() {
             }
         });
         //update one object using its object id
-        app.put('/collection/:collectionName/:id', async (req,res,next) => {
+        app.put('/lessons/:id', async (req,res,next) => {
             try{
                 if (!ObjectId.isValid(req.params.id)) {
                     return res.status(400).send({ msg: 'Invalid object id'});
@@ -75,19 +88,19 @@ async function startServer() {
             }
         });
         //delete object using its object id
-        app.get('/collection/:collectionName/:id', async (req,res,next) => {
-            try{
-                if (!ObjectId.isValid(req.params.id)) {
-                    return res.status(400).send({ msg: 'Invalid Output'});
-                }
-                const result = await req.collection.deleteOne({
-                    _id: new ObjectId(req.params.id)
-                });
-                res.send(result.deletedCount === 1 ? { msg: 'success'} : { msg: 'error'});
-            } catch (err) {
-                next(err);
-            }
-        });
+        // app.get('/collection/:collectionName/:id', async (req,res,next) => {
+        //     try{
+        //         if (!ObjectId.isValid(req.params.id)) {
+        //             return res.status(400).send({ msg: 'Invalid Output'});
+        //         }
+        //         const result = await req.collection.deleteOne({
+        //             _id: new ObjectId(req.params.id)
+        //         });
+        //         res.send(result.deletedCount === 1 ? { msg: 'success'} : { msg: 'error'});
+        //     } catch (err) {
+        //         next(err);
+        //     }
+        // });
 
         const port = process.env.PORT || 6001;
 
